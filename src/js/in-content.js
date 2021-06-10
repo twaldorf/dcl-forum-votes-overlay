@@ -1,36 +1,52 @@
-/* in-content.js
-*
-* This file has an example on how to communicate with other parts of the extension through a long lived connection (port) and also through short lived connections (chrome.runtime.sendMessage).
-*
-* Note that in this scenario the port is open from the popup, but other extensions may open it from the background page or not even have either background.js or popup.js.
-* */
+const render = (data) => {
+    const totalVp = Object.keys(data).reduce((prev, curr) => {
+        return prev + data[curr].vp
+    },0)
+    let total1 = 0
+    let total2 = 0
+    Object.keys(data).map((key) => {
+        if (data[key].choice == 1){
+            total1 += data[key].vp
+        }
+        if (data[key].choice == 2){
+            total2 += data[key].vp
+        }
+    })
+    const percentOfTotal1 = Math.trunc(total1/totalVp * 100)
+    const percentOfTotal2 = Math.trunc(total2/totalVp * 100)
+    console.log(totalVp, total1, total2, percentOfTotal1, percentOfTotal2)
 
-// Extension port to communicate with the popup, also helps detecting when it closes
-let port = null;
+    const stats = document.createElement('div')
+    stats.id = 'pluginStats'
+    const vpPercent1 = document.createElement('li').textContent = `Yes: ${percentOfTotal1}%`
+    const vpPercent2 = document.createElement('li').textContent = `No: ${percentOfTotal2}%`
+    stats.style.position = 'fixed'
+    stats.style.right = '1rem'
+    stats.style.bottom = '1rem'
+    stats.style.backgroundColor = '#ffffff'
+    stats.style.display = 'flex'
+    document.querySelector('body').append(stats)
+    document.getElementById('pluginStats').append(vpPercent1)
+    document.getElementById('pluginStats').append(vpPercent2)
+}
 
-// Send messages to the open port (Popup)
-const sendPortMessage = data => port.postMessage(data);
+const setup = () => {
+    const link = Array.from(document.querySelectorAll('a')).find(e => e.innerText == "Vote on this proposal on the Decentraland DAO")
+    if (link) {
+        const href = link.href
+        const regex = /(?<=\?id=).*/g
+        const id = href.match(regex)
+        try {
+            const votes = fetch(`https://governance.decentraland.org/api/proposals/${id}/votes`)
+                .then(response => response.json()).then(data => {render(data.data)})
+        } catch (e) {
+            console.error(e)
+        }
+    }
+}
 
-// Handle incoming popup messages
-const popupMessageHandler = message => console.log('in-content.js - message from popup:', message);
+setup()
 
-// Start scripts after setting up the connection to popup
-chrome.extension.onConnect.addListener(popupPort => {
-    // Listen for popup messages
-    popupPort.onMessage.addListener(popupMessageHandler);
-    // Set listener for disconnection (aka. popup closed)
-    popupPort.onDisconnect.addListener(() => {
-        console.log('in-content.js - disconnected from popup');
-    });
-    // Make popup port accessible to other methods
-    port = popupPort;
-    // Perform any logic or set listeners
-    sendPortMessage('message from in-content.js');
-});
-
-// Response handler for short lived messages
-const handleBackgroundResponse = response =>
-    console.log('in-content.js - Received response:', response);
-
-// Send a message to background.js
-chrome.runtime.sendMessage('Message from in-content.js!', handleBackgroundResponse);
+window.addEventListener('onhashchange', () => {
+    setup()
+})

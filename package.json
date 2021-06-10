@@ -1,9 +1,9 @@
 {
-    "name": "chrome-extension-template",
+    "name": "dlc-forum-votes-overlay",
     "version": "0.0.9",
-    "description": "Chrome extension boilerplate, replace all values!",
+    "description": "Overlay the current vote status of matching governance.decentraland.org topics on forum.decentraland.org",
     "main": "src/index.js",
-    "repository": "git@github.com:edrpls/chrome-extension-template.git",
+    "repository": "https://github.com/twaldorf/dlc-forum-votes-overlay",
     "license": "MIT",
     "devDependencies": {
         "babel-cli": "^6.26.0",

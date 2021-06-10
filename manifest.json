@@ -8,13 +8,13 @@
         "48": "48x48.png",
         "128": "128x128.png"
     },
-    "browser_action": {
-        "default_title": "Boilerplate popup!",
-        "default_popup": "popup.html"
-    },
+    "page_action":{},
+    "externally_connectable": {
+        "matches": ["*://forum.decentraland.org/*"]
+      },
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
+            "matches": ["*://forum.decentraland.org/*"],
             "js": ["in-content.js"]
         }
     ],
@@ -25,5 +25,5 @@
     "content_security_policy":
         "script-src 'self' 'unsafe-eval'; object-src 'self'; img-src * data: 'self' 'unsafe-eval'",
     "offline_enabled": true,
-    "permissions": ["tabs", "<all_urls>", "activeTab"]
+    "permissions": ["tabs", "*://forum.decentraland.org/*", "activeTab"]
 }
