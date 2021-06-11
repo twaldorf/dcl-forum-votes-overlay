@@ -4,63 +4,78 @@ const $c = (_) => document.createElement(_)
 
 const render = (data) => {
     cleanup()
+
+    //find the number of poll options
+    const optionCount = Object.keys(data).reduce((prev,curr) => {
+        let choice = data[curr].choice
+        if (choice == prev || choice < prev) { return prev} else if (choice > prev) {return choice}
+    }, 0)
+
+    //build array of options
+    var options = []
+    for (let i = 0; i <= optionCount; i++) {
+        options.push({
+            number: i, 
+            title: `Choice ${i}`,
+        })
+    }
+
+    // find total vp cast
     const totalVp = Object.keys(data).reduce((prev, curr) => {
         return prev + data[curr].vp
     },0)
-    let total1 = 0
-    let total2 = 0
-    Object.keys(data).map((key) => {
-        if (data[key].choice == 1){
-            total1 += data[key].vp
-        }
-        if (data[key].choice == 2){
-            total2 += data[key].vp
-        }
+
+    //count up total vp cast for each option
+    options.reduce((prev,curr,index) => {
+        options[index].vp = Object.keys(data).filter((voteId) => {
+            return data[voteId].choice == index
+        }).reduce((p,c) => {
+            return p + c.vp
+        }, 0)
     })
-    const percentOfTotal1 = Math.trunc(total1/totalVp * 100)
-    const percentOfTotal2 = Math.trunc(total2/totalVp * 100)
+
+    //find each option's percent-of-total
+    options.forEach(option => {
+        option.percent = Math.trunc(option.vp/totalVp * 100)
+    })
 
     const stats = $c('div')
     const title = $c('div')
     stats.classList.add(containerId)
     
     title.textContent = 'CURRENT RESULTS'
+    stats.append(title)
+
+    // assign colors
+    options.forEach(option => {
+        if (options.length > 2) {
+            option.color = `${option.number * 10}${option.number * 20}${option.number * 20}`
+        }
+    })
 
     // build progress bars
-    const progress1 = $c('div')
-    progress1.classList.add('progressBarGreen')
-    progress1.style.width = `${percentOfTotal1}%`
-    const progress2 = $c('div')
-    progress2.classList.add('progressBarRed')
-    progress2.style.width = `${percentOfTotal2}%`
-    const progress1grey = $c('div')
-    progress1grey.classList.add('progressBarGrey')
-    const progress2grey = $c('div')
-    progress2grey.classList.add('progressBarGrey')
+    options.forEach(option => {
+        const progress = $c('div')
+        progress.classList.add('progressBarColor')
+        progress.style.width = `${option.percent}%`
+        progress.style.backgroundColor = `#${option.color}`
 
-    const progressBatch1 = $c('div')
-    progressBatch1.classList.add('progressBarGroup')
-    progressBatch1.append(progress1)
-    progressBatch1.append(progress1grey)
+        const progressGrey = $c('div')
+        progressGrey.classList.add('progressBarGrey')
 
-    const progressBatch2 = $c('div')
-    progressBatch2.classList.add('progressBarGroup')
-    progressBatch2.append(progress2)
-    progressBatch2.append(progress2grey)
+        const progressBatch = $c('div')
+        progressBatch.classList.add('progressBarGroup')
+        progressBatch.append(progress)
+        progressBatch.append(progressGrey)
 
-    //build percents
-    const vpPercent1 = $c('li')
-    vpPercent1.textContent = `Yes: ${percentOfTotal1}%`
-    const vpPercent2 = $c('li')
-    vpPercent2.textContent = `No: ${percentOfTotal2}%`
+        const title = $c('li')
+        title.textContent = `${option.title}: ${option.percent}%`
 
-    //assemble final panel
-    vpPercent1.append(progressBatch1)
-    vpPercent2.append(progressBatch2)
-    stats.append(title)
-    stats.append(vpPercent1)
-    stats.append(vpPercent2)
+        title.append(progressBatch)
+        stats.append(title)
+    })
 
+    //add to document body
     document.querySelector('body').append(stats)
 }
 

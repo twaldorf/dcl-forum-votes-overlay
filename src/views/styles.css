@@ -20,11 +20,11 @@
     font-weight: bold;
     list-style: none;
     grid-column: 1;
-    grid-row: 2;
+    grid-row-start: 2;
     position: relative;
 }
 
-.pluginStats > li:last-of-type {
+.pluginStats > li:nth-of-type(1) {
     grid-column: 2;
 }
 
@@ -59,12 +59,6 @@
     background-color: #efefef;
 }
 
-.pluginStats .progressBarGroup > .progressBarGreen {
-    background-color: #44b600;
+.pluginStats .progressBarGroup > .progressBarColor {
     z-index: 1;
 }
-.pluginStats .progressBarGroup > .progressBarRed {
-    background-color: #ff4545;
-    z-index: 1;
-}
-
