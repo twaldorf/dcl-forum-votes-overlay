@@ -1,0 +1,61 @@
+.pluginStats {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .2rem;
+    border: 1px solid rgba(115,110,125,.24);
+
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+}
+
+.pluginStats > li {
+    margin: .5rem;
+    font-weight: bold;
+    list-style: none;
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.pluginStats > li:last-of-type {
+    grid-column: 2;
+}
+
+.pluginStats .progressBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    content: "";
+    display: block;
+    border-radius: 6px;
+    min-height: 6px;
+}
+
+.pluginStats .progressBarGroup > div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    display: block;
+    border-radius: 6px;
+    min-height: 6px;
+}
+
+.pluginStats .progressBarGroup > div:last-of-type{
+    width:100%;
+    border-radius: 6px;
+    min-height: 6px;
+    background-color: #efefef;
+}
+
+.pluginStats .progressBarGroup:first-of-type:first-child {
+    background-color: #44b600;
+}
+.pluginStats .progressBarGroup:first-of-type:last-child {
+    background-color: #ff4545;
+}
+

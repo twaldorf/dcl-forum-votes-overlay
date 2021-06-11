@@ -1,5 +1,5 @@
 {
-    "name": "dlc-forum-votes-overlay",
+    "name": "dcl-forum-votes-overlay",
     "version": "0.0.9",
     "description": "Overlay the current vote status of matching governance.decentraland.org topics on forum.decentraland.org",
     "main": "src/index.js",
