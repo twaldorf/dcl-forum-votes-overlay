@@ -5,15 +5,21 @@ const $c = (_) => document.createElement(_)
 const render = (data) => {
     cleanup()
 
+    const voteIds = Object.keys(data)
+
     //find the number of poll options
-    const optionCount = Object.keys(data).reduce((prev,curr) => {
-        let choice = data[curr].choice
-        if (choice == prev || choice < prev) { return prev} else if (choice > prev) {return choice}
+    const optionCount = voteIds.reduce((prev,curr) => {
+        const choice = data[curr].choice
+        if (choice == prev || choice < prev) { 
+            return prev 
+        } else if (choice > prev) {
+            return choice
+        }
     }, 0)
 
     //build array of options
     var options = []
-    for (let i = 0; i <= optionCount; i++) {
+    for (let i = 1; i <= optionCount; i++) {
         options.push({
             number: i, 
             title: `Choice ${i}`,
@@ -21,20 +27,24 @@ const render = (data) => {
     }
 
     // find total vp cast
-    const totalVp = Object.keys(data).reduce((prev, curr) => {
+    const totalVp = voteIds.reduce((prev, curr) => {
         return prev + data[curr].vp
     },0)
 
+    
     //count up total vp cast for each option
-    options.reduce((prev,curr,index) => {
-        options[index].vp = Object.keys(data).filter((voteId) => {
-            return data[voteId].choice == index
-        }).reduce((p,c) => {
-            return p + c.vp
+
+    options.forEach((option) => {
+        const optionVoteIds = voteIds.filter((voteId) => {
+            return data[voteId].choice == option.number
+        })
+        const optionVp = optionVoteIds.reduce((prev,voteId) => {
+            return prev + data[voteId].vp
         }, 0)
+        option.vp = optionVp
     })
 
-    //find each option's percent-of-total
+    //set each option's approximate percent-of-total
     options.forEach(option => {
         option.percent = Math.trunc(option.vp/totalVp * 100)
     })
@@ -48,9 +58,25 @@ const render = (data) => {
 
     // assign colors
     options.forEach(option => {
+        var colors
         if (options.length > 2) {
-            option.color = `${option.number * 10}${option.number * 20}${option.number * 20}`
+            colors = [
+                'FF851B',
+                'FFDC00',
+                'B10DC9',
+                '85144b',
+                '0074D9',
+                '3D9970',
+            ]
+        } else {
+            colors = [
+                '2ECC40',
+                'FF4136'
+            ]
         }
+        options.forEach(option=>{
+            option.color = colors[option.number - 1]
+        })
     })
 
     // build progress bars
