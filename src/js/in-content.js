@@ -28,15 +28,15 @@ const render = (data) => {
 
     // build progress bars
     const progress1 = $c('div')
-    progress1.classList.add('progress-bar-color')
+    progress1.classList.add('progressBarGreen')
     progress1.style.width = `${percentOfTotal1}%`
     const progress2 = $c('div')
-    progress2.classList.add('progress-bar-color')
+    progress2.classList.add('progressBarRed')
     progress2.style.width = `${percentOfTotal2}%`
     const progress1grey = $c('div')
-    progress1grey.classList.add('progress-bar-grey')
+    progress1grey.classList.add('progressBarGrey')
     const progress2grey = $c('div')
-    progress2grey.classList.add('progress-bar-grey')
+    progress2grey.classList.add('progressBarGrey')
 
     const progressBatch1 = $c('div')
     progressBatch1.classList.add('progressBarGroup')
@@ -92,7 +92,6 @@ function cleanup () {
 window.onload = setup
 
 chrome.runtime.onMessage.addListener(() => {
-    console.log('updated');
     cleanup()
     setup()
 });

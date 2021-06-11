@@ -1,11 +1,14 @@
 .pluginStats {
     background-color: white;
-    padding: 1rem;
+    padding: 1rem 1rem 1.5rem 1rem;
     border-radius: 8px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: .2rem;
+    gap: .5rem;
     border: 1px solid rgba(115,110,125,.24);
+
+    font-weight: 300;
+    color: #888;
 
     position: fixed;
     right: 2rem;
@@ -13,15 +16,21 @@
 }
 
 .pluginStats > li {
-    margin: .5rem;
+    color: #222222;
     font-weight: bold;
     list-style: none;
     grid-column: 1;
     grid-row: 2;
+    position: relative;
 }
 
 .pluginStats > li:last-of-type {
     grid-column: 2;
+}
+
+.pluginStats .progressBarGroup {
+    top: .2rem;
+    position: relative;
 }
 
 .pluginStats .progressBar {
@@ -45,17 +54,17 @@
     min-height: 6px;
 }
 
-.pluginStats .progressBarGroup > div:last-of-type{
+.pluginStats .progressBarGroup > .progressBarGrey{
     width:100%;
-    border-radius: 6px;
-    min-height: 6px;
     background-color: #efefef;
 }
 
-.pluginStats .progressBarGroup:first-of-type:first-child {
+.pluginStats .progressBarGroup > .progressBarGreen {
     background-color: #44b600;
+    z-index: 1;
 }
-.pluginStats .progressBarGroup:first-of-type:last-child {
+.pluginStats .progressBarGroup > .progressBarRed {
     background-color: #ff4545;
+    z-index: 1;
 }
 
